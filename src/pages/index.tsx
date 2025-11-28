@@ -11,6 +11,7 @@ export default function HomePage() {
   dataRef.current = data;
   useEffect(() => {
     // 挂载时执行的操作
+    
     asyncFetch();
     return () => {
       // 卸载时执行的操作
@@ -27,20 +28,30 @@ export default function HomePage() {
   const config = {
     xField: 'time',
     data: data,
-    scale: { y: { domainMax: 10 } },
     children: [
       {
         type: 'interval',
-        yField: 'waiting',
+        yField: 'min'
       },
       {
         type: 'line',
-        yField: 'people',
-        scale: { color: { relations: [['people', '#fdae6b']] } },
-        axis: { y: { position: 'right' } },
-        style: { lineWidth: 2 },
+        yField: 'max',
       },
     ],
+    axis: {
+      y: false
+    },
+    style: {
+      stroke: '#59a14f',
+      fill: (item, index, arr) => {
+        if(item.max <= 0) {
+          return 'red'
+        }
+        if(item.min >= 0) {
+          return 'green'
+        }
+      }
+    }
   };
   
   return (
